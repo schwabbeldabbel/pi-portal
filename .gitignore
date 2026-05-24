@@ -1,4 +1,35 @@
-.nx/cache
-/tmp
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Nx
+.nx/
+.nxcache/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*
 
 
