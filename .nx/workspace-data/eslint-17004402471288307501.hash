@@ -1,5 +1,5 @@
 {
-  "10910827087012328645": {
+  "16532531272893774795": {
     "api": {
       "targets": {
         "eslint:lint": {
@@ -41,7 +41,7 @@
       }
     }
   },
-  "1087922493048710751": {
+  "16311538928931130122": {
     "api-e2e": {
       "targets": {
         "eslint:lint": {
@@ -83,7 +83,7 @@
       }
     }
   },
-  "16675974393679719022": {
+  "8926129996210013879": {
     "shared-data": {
       "targets": {
         "eslint:lint": {
@@ -125,7 +125,7 @@
       }
     }
   },
-  "12120697133780167214": {
+  "12875242238347916451": {
     "web": {
       "targets": {
         "eslint:lint": {
@@ -167,48 +167,5 @@
       }
     }
   },
-  "12629311741293203585": {
-    ".angular/cache/21.2.12/web/vite/deps": {
-      "targets": {
-        "eslint:lint": {
-          "command": "eslint .",
-          "cache": true,
-          "options": {
-            "cwd": ".angular/cache/21.2.12/web/vite/deps"
-          },
-          "inputs": [
-            "default",
-            "^default",
-            "{workspaceRoot}/eslint.config.mjs",
-            "{workspaceRoot}/tools/eslint-rules/**/*",
-            {
-              "externalDependencies": [
-                "eslint"
-              ]
-            }
-          ],
-          "outputs": [
-            "{options.outputFile}"
-          ],
-          "metadata": {
-            "technologies": [
-              "eslint"
-            ],
-            "description": "Runs ESLint on project",
-            "help": {
-              "command": "npx eslint --help",
-              "example": {
-                "options": {
-                  "max-warnings": 0
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "973441050905013201": {},
-  "16384883281274103997": {},
-  "7207232233207677088": {}
+  "11001184137157917783": {}
 }

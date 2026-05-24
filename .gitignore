@@ -22,8 +22,13 @@ build/
 .env.local
 .env.*.local
 
+# Angular
+.angular/cache/
+
 # Nx
 .nx/
+.nx/cache/
+.nx/workspace-data
 .nxcache/
 
 # Logs
