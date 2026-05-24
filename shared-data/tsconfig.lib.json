@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../dist/out-tsc",
+    "module": "nodenext",
     "declaration": true,
     "types": ["node"],
-    "ignoreDeprecations": "5.0"
+    "moduleResolution": "nodenext"
   },
   "include": ["src/**/*.ts"]
 }
