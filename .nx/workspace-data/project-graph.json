@@ -1,5 +1,94 @@
 {
   "nodes": {
+    "shared-data": {
+      "name": "shared-data",
+      "type": "lib",
+      "data": {
+        "root": "shared-data",
+        "targets": {
+          "eslint:lint": {
+            "cache": true,
+            "options": {
+              "cwd": "shared-data",
+              "command": "eslint ."
+            },
+            "inputs": [
+              "default",
+              "^default",
+              "{workspaceRoot}/eslint.config.mjs",
+              "{workspaceRoot}/shared-data/eslint.config.mjs",
+              "{workspaceRoot}/tools/eslint-rules/**/*",
+              {
+                "externalDependencies": [
+                  "eslint"
+                ]
+              }
+            ],
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "metadata": {
+              "technologies": [
+                "eslint"
+              ],
+              "description": "Runs ESLint on project",
+              "help": {
+                "command": "npx eslint --help",
+                "example": {
+                  "options": {
+                    "max-warnings": 0
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": [
+              "{options.outputPath}"
+            ],
+            "options": {
+              "outputPath": "dist/shared-data",
+              "main": "shared-data/src/index.ts",
+              "tsConfig": "shared-data/tsconfig.lib.json",
+              "assets": [
+                "shared-data/*.md"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "default",
+              "^default"
+            ]
+          }
+        },
+        "name": "shared-data",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {},
+          "js": {
+            "packageName": "shared-data",
+            "packageVersion": "0.0.1",
+            "packageMain": "./src/index.js",
+            "isInPackageManagerWorkspaces": false
+          }
+        },
+        "$schema": "../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "shared-data/src",
+        "projectType": "library",
+        "implicitDependencies": []
+      }
+    },
     "api-e2e": {
       "name": "api-e2e",
       "type": "e2e",
@@ -15556,6 +15645,18 @@
     }
   },
   "dependencies": {
+    "shared-data": [
+      {
+        "source": "shared-data",
+        "target": "npm:jsonc-eslint-parser",
+        "type": "dynamic"
+      },
+      {
+        "source": "shared-data",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
     "api-e2e": [
       {
         "source": "api-e2e",
@@ -15582,6 +15683,11 @@
       {
         "source": "api",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "shared-data",
         "type": "static"
       },
       {
@@ -15618,6 +15724,11 @@
       },
       {
         "source": "web",
+        "target": "shared-data",
+        "type": "static"
+      },
+      {
+        "source": "web",
         "target": "npm:@angular/platform-browser",
         "type": "static"
       },
@@ -15628,6 +15739,26 @@
       }
     ],
     "pi-portal": [
+      {
+        "source": "pi-portal",
+        "target": "npm:@nestjs/common",
+        "type": "dynamic"
+      },
+      {
+        "source": "pi-portal",
+        "target": "npm:@nestjs/core",
+        "type": "dynamic"
+      },
+      {
+        "source": "pi-portal",
+        "target": "npm:tslib",
+        "type": "dynamic"
+      },
+      {
+        "source": "pi-portal",
+        "target": "npm:tslib",
+        "type": "static"
+      },
       {
         "source": "pi-portal",
         "target": "npm:@nx/eslint-plugin",
@@ -37633,5 +37764,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1779616728349
+  "computedAt": 1779619540153
 }

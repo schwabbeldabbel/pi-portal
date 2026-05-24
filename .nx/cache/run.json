@@ -1,0 +1,32 @@
+{
+  "run": {
+    "command": "nx run api:build:development",
+    "startTime": "2026-05-24T10:45:40.429Z",
+    "endTime": "2026-05-24T10:45:52.540Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "shared-data:build",
+      "target": "build",
+      "projectName": "shared-data",
+      "hash": "14209194019396134753",
+      "startTime": "2026-05-24T10:45:40.461Z",
+      "endTime": "2026-05-24T10:45:40.468Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    },
+    {
+      "taskId": "api:build:development",
+      "target": "build",
+      "projectName": "api",
+      "hash": "14190363798054674053",
+      "startTime": "2026-05-24T10:45:40.472Z",
+      "endTime": "2026-05-24T10:45:52.510Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    }
+  ]
+}

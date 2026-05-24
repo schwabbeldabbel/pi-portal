@@ -1,0 +1,4 @@
+> nx run shared-data:build
+
+Compiling TypeScript files for project "shared-data"...
+Done compiling TypeScript files for project "shared-data".

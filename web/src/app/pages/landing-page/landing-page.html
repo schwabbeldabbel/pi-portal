@@ -1,0 +1,10 @@
+<h1>Pi Controller</h1>
+
+@if (status$ | async; as status) {
+  <p>Name: {{ status.name }}</p>
+  <p>Online: {{ status.online }}</p>
+  <p>Quelle: {{ status.source }}</p>
+  <p>Zeit: {{ status.timestamp }}</p>
+} @else {
+  <p>Lade Status...</p>
+}
