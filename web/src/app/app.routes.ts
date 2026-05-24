@@ -6,4 +6,5 @@ export const appRoutes: Route[] = [
         path: '',
         component: LandingPage,
     }
+    
 ];

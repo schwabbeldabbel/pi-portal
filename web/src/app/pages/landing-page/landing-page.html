@@ -1,10 +1,29 @@
-<h1>Pi Controller</h1>
-
-@if (status$ | async; as status) {
-  <p>Name: {{ status.name }}</p>
-  <p>Online: {{ status.online }}</p>
-  <p>Quelle: {{ status.source }}</p>
-  <p>Zeit: {{ status.timestamp }}</p>
-} @else {
-  <p>Lade Status...</p>
-}
+<nb-layout>
+  <nb-sidebar>
+    <nb-menu [items]="menuItems"></nb-menu>
+  </nb-sidebar>
+  <nb-layout-header> 
+    <h1>Pi Portal</h1>
+  </nb-layout-header>
+  @if(selectedMenuItem === menuItems[1].title) {
+    <nb-layout-column>
+      <div>
+        @if (status$ | async; as status) {
+          <p>Name: {{ status.name }}</p>
+          <p>Online: {{ status.online }}</p>
+        <p>Quelle: {{ status.source }}</p>
+        <p>Zeit: {{ status.timestamp }}</p>
+      } @else {
+        <p>Lade Status...</p>
+      }
+    </div>
+  </nb-layout-column>
+  } @else {
+    <nb-layout-column>
+      <p>Willkommen auf der Startseite!</p>
+    </nb-layout-column>
+  }
+  
+  
+ 
+</nb-layout>
