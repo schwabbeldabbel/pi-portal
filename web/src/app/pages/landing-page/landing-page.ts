@@ -3,7 +3,17 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { SystemStatus } from 'shared-data';
-import { NbButtonModule, NbLayoutModule, NbSidebarModule, NbMenuModule, NbMenuService, NbMenuBag, NbMenuItem } from '@nebular/theme';
+import { 
+  NbButtonModule, 
+  NbLayoutModule, 
+  NbSidebarModule, 
+  NbMenuModule, 
+  NbMenuService, 
+  NbMenuBag, 
+  NbMenuItem,
+  NbCardModule,
+  NbSpinnerModule,
+} from '@nebular/theme';
 
 @Component({
   selector: 'app-landing-page',
@@ -13,6 +23,8 @@ import { NbButtonModule, NbLayoutModule, NbSidebarModule, NbMenuModule, NbMenuSe
     NbSidebarModule,
     NbMenuModule,
     NbButtonModule,
+    NbCardModule,
+    NbSpinnerModule,
   ],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
@@ -24,7 +36,9 @@ export class LandingPage {
 
   protected menuItems: NbMenuItem[] = [
     { title: 'Home' },
+    { title: 'Pictures' },
     { title: 'Health' },
+    { title: 'Settings' },
   ];
 
   protected status$: Observable<SystemStatus> = this.http.get<SystemStatus>('http://localhost:3000/api/getStatus');

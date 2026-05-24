@@ -5,25 +5,35 @@
   <nb-layout-header> 
     <h1>Pi Portal</h1>
   </nb-layout-header>
-  @if(selectedMenuItem === menuItems[1].title) {
+  @if(selectedMenuItem === "Health") {
     <nb-layout-column>
       <div>
         @if (status$ | async; as status) {
-          <p>Name: {{ status.name }}</p>
-          <p>Online: {{ status.online }}</p>
-        <p>Quelle: {{ status.source }}</p>
-        <p>Zeit: {{ status.timestamp }}</p>
+          <nb-card>
+            <nb-card-header>Health Status</nb-card-header>
+            <nb-card-body>
+              <p>Name: {{ status.name }}</p>
+              <p>Online: {{ status.online }}</p>
+              <p>Quelle: {{ status.source }}</p>
+              <p>Zeit: {{ status.timestamp }}</p>
+            </nb-card-body>
+          </nb-card>
       } @else {
-        <p>Lade Status...</p>
+        <nb-card [nbSpinner]="true" nbSpinnerStatus="primary">
+          <nb-card-body>Lade Status</nb-card-body>
+        </nb-card>
       }
     </div>
   </nb-layout-column>
+  } @else if (selectedMenuItem === "Pictures") {
+    <nb-layout-column>
+      <p>Bilder</p>
+    </nb-layout-column>
   } @else {
     <nb-layout-column>
       <p>Willkommen auf der Startseite!</p>
     </nb-layout-column>
   }
-  
   
  
 </nb-layout>
