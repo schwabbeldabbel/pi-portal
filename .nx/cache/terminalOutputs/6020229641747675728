@@ -1,5 +1,0 @@
-> nx run shared-data:build
-
-Compiling TypeScript files for project "shared-data"...
-[1m[31m[91merror[0m[90m TS5103: [0mInvalid value for '--ignoreDeprecations'.
-[39m[22m
