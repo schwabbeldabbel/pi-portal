@@ -1,39 +1,64 @@
-<nb-layout>
-  <nb-sidebar>
-    <nb-menu [items]="menuItems"></nb-menu>
-  </nb-sidebar>
-  <nb-layout-header> 
-    <h1>Pi Portal</h1>
-  </nb-layout-header>
-  @if(selectedMenuItem === "Health") {
-    <nb-layout-column>
-      <div>
+<ion-split-pane contentId="main-content" when="lg">
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Pi Portal</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        @for (item of menuItems; track item.title) {
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              button
+              [detail]="false"
+              (click)="selectedMenuItem = item.title">
+              <ion-label>{{ item.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        }
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Pi Portal</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      @if (selectedMenuItem === 'Health') {
         @if (status$ | async; as status) {
-          <nb-card>
-            <nb-card-header>Health Status</nb-card-header>
-            <nb-card-body>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Health Status</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
               <p>Name: {{ status.name }}</p>
               <p>Online: {{ status.online }}</p>
               <p>Quelle: {{ status.source }}</p>
               <p>Zeit: {{ status.timestamp }}</p>
-            </nb-card-body>
-          </nb-card>
+            </ion-card-content>
+          </ion-card>
+        } @else {
+          <ion-card>
+            <ion-card-content class="loading-card">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Lade Status</p>
+            </ion-card-content>
+          </ion-card>
+        }
+      } @else if (selectedMenuItem === 'Pictures') {
+        <p>Bilder</p>
       } @else {
-        <nb-card [nbSpinner]="true" nbSpinnerStatus="primary">
-          <nb-card-body>Lade Status</nb-card-body>
-        </nb-card>
+        <p>Willkommen auf der Startseite!</p>
       }
-    </div>
-  </nb-layout-column>
-  } @else if (selectedMenuItem === "Pictures") {
-    <nb-layout-column>
-      <p>Bilder</p>
-    </nb-layout-column>
-  } @else {
-    <nb-layout-column>
-      <p>Willkommen auf der Startseite!</p>
-    </nb-layout-column>
-  }
-  
- 
-</nb-layout>
+    </ion-content>
+  </div>
+</ion-split-pane>
