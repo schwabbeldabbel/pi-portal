@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "nx run-many -t build -p web,api",
+    "build:web": "nx build web",
+    "build:api": "nx build api",
+    "serve:web": "nx serve web --host=0.0.0.0",
+    "serve:api": "nx serve api",
+    "show:projects": "nx show projects"
   },
   "keywords": [],
   "author": "",
