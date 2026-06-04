@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "paths": {
       "shared-data": ["./shared-data/src/index.ts"]
-    }
+    },
+    "strictPropertyInitialization": false,
+    "useDefineForClassFields": false
   },
   "exclude": ["node_modules", "tmp"]
 }
