@@ -7,6 +7,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import "reflect-metadata";
+import { AppDataSource } from './data-source';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +19,13 @@ async function bootstrap() {
     ],
   });
   const globalPrefix = 'api';
+  Logger.log('Starting Database Connection');
   app.setGlobalPrefix(globalPrefix);
+  try {
+      await AppDataSource.initialize()
+  } catch (error) {
+      console.log(error)
+  }
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(

@@ -16,17 +16,6 @@ export class AppController {
     }
   }
 
-  @Get('read/solar/values')
-  getPvData(): PvData {
-    return {
-      voltage: 0,
-      current: 0,
-      power: 0,
-      shuntVoltageMv: 0,
-      source: 'NestJS API',
-      measuredAt: new Date().toISOString(),
-    }
-  }
 
   @Post('write/solar/values')
   setPvData(@Body() data: PvData) {
