@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { SystemStatus, PvData } from 'shared-data';
+import { SystemStatus } from 'shared-data';
 
 @Controller()
 export class AppController {
@@ -14,15 +14,5 @@ export class AppController {
       source: 'NestJS API',
       timestamp: new Date().toISOString(),
     }
-  }
-
-
-  @Post('write/solar/values')
-  setPvData(@Body() data: PvData) {
-    console.log('Received PV Data:', data);
-    return {
-      ok: true,
-      receivedAt: new Date().toISOString(),
-    };
   }
 }
