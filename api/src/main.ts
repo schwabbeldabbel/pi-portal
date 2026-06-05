@@ -13,7 +13,7 @@ async function bootstrap() {
   ];
 
   app.enableCors({
-    origin: corsOrigins,
+    origin: true,
   });
 
   const globalPrefix = 'api';
