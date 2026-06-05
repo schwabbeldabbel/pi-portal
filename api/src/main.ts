@@ -7,10 +7,10 @@ import { AppDataSource } from './data-source';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200')
-    .split(',')
-    .map(origin => origin.trim())
-    .filter(Boolean);
+  const corsOrigins = [
+    "http://localhost:4200",
+    "http://10.101.1.31:3000",
+  ];
 
   app.enableCors({
     origin: corsOrigins,
