@@ -6,7 +6,7 @@ import { SystemStatus } from 'shared-data';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('getStatus')
+  @Get('read/getStatus')
   getStatus(): SystemStatus {
     return {
       name: 'Pi-Portal API',
