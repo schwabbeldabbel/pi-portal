@@ -27,10 +27,8 @@ async function bootstrap() {
       console.log(error)
   }
   const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
-  );
+  await app.listen(3000, '0.0.0.0');
+  console.log(`Api running at: ${await app.getUrl()}`);
 }
 
 bootstrap();
