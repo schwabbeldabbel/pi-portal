@@ -60,7 +60,7 @@ export class LandingPage {
   ];
 
   protected status$: Observable<SystemStatus> =
-    this.http.get<SystemStatus>('http://localhost:3000/api/getStatus');
+    this.http.get<SystemStatus>('http://10.101.1.31:3000/api/getStatus');
 
   protected selectedMenuItem: string = this.menuItems[0].title;
 
