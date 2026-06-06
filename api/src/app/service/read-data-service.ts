@@ -2,12 +2,19 @@ import { Logger } from "@nestjs/common";
 import { FlatWidgetData } from "shared-data";
 import { AppDataSource } from "../../data-source";
 import { PvEntity } from "../../entities/PvEntity";
-import { mapPvEntityToFlatWidgetData } from "./mapper";
+import { mapPvEntityToFlatWidgetData, mapWeatherEntityToFlatWidgetData } from "./mapper";
+import { WeatherEntity } from "../../entities/WeatherEntity";
 
 export class ReadDataService {
 
     async readData(): Promise<FlatWidgetData[]> {
         const widgetData: FlatWidgetData[] = [];
+        await this.readPvRepo(widgetData);
+        await this.readWeatherRepo(widgetData);
+        return widgetData;
+    }
+
+    private async readPvRepo(widgetData: FlatWidgetData[]) {
         const pvRepository = AppDataSource.getRepository(PvEntity);
 
         const pvData = await pvRepository
@@ -18,7 +25,18 @@ export class ReadDataService {
         if (pvData) {
             widgetData.push(mapPvEntityToFlatWidgetData(pvData));
         }
+    }
 
-        return widgetData;
+    private async readWeatherRepo(widgetData: FlatWidgetData[]) {
+        const weatherRepository = AppDataSource.getRepository(WeatherEntity);
+
+        const weatherData = await weatherRepository
+            .createQueryBuilder('weather')
+            .orderBy('weather.createdAt', 'DESC')
+            .getOne();
+
+        if (weatherData) {
+            widgetData.push(mapWeatherEntityToFlatWidgetData(weatherData));
+        }
     }
 }

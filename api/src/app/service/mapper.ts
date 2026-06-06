@@ -1,6 +1,7 @@
 import { FlatWidgetData, WidgetType } from "shared-data";
 import { PvEntity } from "../../entities/PvEntity";
 import { WeatherEntity } from "../../entities/WeatherEntity";
+import { getWeatherCodeLabel } from "../weather/weather-code.enum";
 
 export function mapPvEntityToFlatWidgetData(pvData: PvEntity): FlatWidgetData {
     const widgetData = new FlatWidgetData();
@@ -24,7 +25,7 @@ export function mapWeatherEntityToFlatWidgetData(weatherData: WeatherEntity): Fl
         {key: 'Precipitation', value: weatherData.precipitation + " mm" || null},
         {key: 'Cloud Cover', value: weatherData.cloud_cover + " %" || null},
         {key: 'Wind Speed', value: weatherData.wind_speed_10m + " km/h" || null},
-        {key: 'Weather Code', value: weatherData.weather_code || null},
+        {key: 'Weather Code', value: getWeatherCodeLabel(weatherData.weather_code) || null},
     ];
     widgetData.source = weatherData.source;
     return widgetData;
