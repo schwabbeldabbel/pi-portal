@@ -6,9 +6,9 @@ export function mapPvEntityToFlatWidgetData(pvData: PvEntity): FlatWidgetData {
     const widgetData = new FlatWidgetData();
     widgetData.type = WidgetType.PV;
     widgetData.data = [
-        {key: 'Power', value: pvData.power + " mW" || null},
-        {key: 'Voltage', value: pvData.voltage + " mV" || null},
-        {key: 'Current', value: pvData.current + " mA" || null},
+        {key: 'Power', value: pvData.power + " W" || null},
+        {key: 'Voltage', value: pvData.voltage + " V" || null},
+        {key: 'Current', value: pvData.current + " A" || null},
         {key: 'Source', value: pvData.source || null},
     ];
     widgetData.source = pvData.source;
