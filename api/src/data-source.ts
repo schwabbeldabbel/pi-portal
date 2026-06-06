@@ -5,7 +5,7 @@ import { WeatherEntity } from "./entities/WeatherEntity"
 
 export const AppDataSource = new DataSource({
     type: "better-sqlite3",
-    database: "api/src/db/pv_data.db",
+    database: "api/src/db/pi_portal_data.db",
     synchronize: true,
     logging: false,
     entities: [PvEntity, WeatherEntity],

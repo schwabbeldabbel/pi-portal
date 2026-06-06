@@ -1,19 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm"
 
 @Entity('weather_data')
 export class WeatherEntity {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column('real')
-    temperature!: number;
+  @Column('real')
+  temperature_2m!: number;
 
-    @Column('real')
-    humidity!: number;
+  @Column('real')
+  apparent_temperature!: number;
 
-    @Column({ type: 'text' })
-    source!: string;
+  @Column('real')
+  precipitation!: number;
 
-    @Column({ type: 'datetime' })
-    measuredAt!: Date;
+  @Column('real')
+  cloud_cover!: number;
+
+  @Column('real')
+  wind_speed_10m!: number;
+
+  @Column('int')
+  weather_code!: number;
+
+  @Column({ type: 'text' })
+  source!: string;
+
+  @Column({ type: 'datetime' })
+  measuredAt!: Date;
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt!: Date;
 }

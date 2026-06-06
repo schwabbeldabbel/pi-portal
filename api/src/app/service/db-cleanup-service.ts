@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data-source';
 import { PvEntity } from '../../entities/PvEntity';
+import { WeatherEntity } from '../../entities/WeatherEntity';
 
 type TimeBucketKey =
   | 'morning'
@@ -20,6 +21,15 @@ type PvAverages = {
   current: number;
   power: number;
   shuntVoltageMv: number;
+};
+
+type WeatherSummary = {
+  temperature_2m: number;
+  apparent_temperature: number;
+  precipitation: number;
+  cloud_cover: number;
+  wind_speed_10m: number;
+  weather_code: number;
 };
 
 export class DbCleanupService {
@@ -72,6 +82,45 @@ export class DbCleanupService {
 
       console.log(
         `Saved ${summaryEntries.length} summary entries for ${startOfYesterday.toISOString()}`,
+      );
+    });
+  }
+
+  static async cleanupWeatherData(): Promise<void> {
+  await AppDataSource.transaction(async (manager) => {
+    const weatherRepository = manager.getRepository(WeatherEntity);
+    const { startOfYesterday, startOfToday } = this.getYesterdayRange();
+
+    const entries = await this.loadYesterdayRawWeatherEntries(
+      weatherRepository,
+      startOfYesterday,
+      startOfToday,
+    );
+
+    if (entries.length === 0) {
+      console.log('No weather entries to clean up');
+      return;
+    }
+
+    const groupedEntries = this.groupWeatherEntriesByBucket(entries);
+    const summaryEntries = this.buildWeatherSummaryEntries(
+      weatherRepository,
+      groupedEntries,
+      startOfYesterday,
+    );
+
+    if (summaryEntries.length > 0) {
+      await weatherRepository.save(summaryEntries);
+    }
+
+    await this.deleteYesterdayRawWeatherEntries(
+        weatherRepository,
+        startOfYesterday,
+        startOfToday,
+      );
+
+      console.log(
+        `Saved ${summaryEntries.length} weather summary entries for ${startOfYesterday.toISOString()}`,
       );
     });
   }
@@ -247,4 +296,130 @@ export class DbCleanupService {
       })
       .execute();
   }
+
+  private static async loadYesterdayRawWeatherEntries(
+  weatherRepository: Repository<WeatherEntity>,
+  startOfYesterday: Date,
+  startOfToday: Date,
+  ): Promise<WeatherEntity[]> {
+    return await weatherRepository
+      .createQueryBuilder('weather')
+      .where('weather.measuredAt >= :start', { start: startOfYesterday })
+      .andWhere('weather.measuredAt < :end', { end: startOfToday })
+      .andWhere('weather.source NOT LIKE :summaryPrefix', {
+        summaryPrefix: 'weather_summary%',
+      })
+      .getMany();
+  }
+
+  private static groupWeatherEntriesByBucket(
+    entries: WeatherEntity[],
+  ): Record<TimeBucketKey, WeatherEntity[]> {
+    const grouped: Record<TimeBucketKey, WeatherEntity[]> = {
+      morning: [],
+      forenoon: [],
+      midday: [],
+      afternoon: [],
+      evening: [],
+    };
+
+    for (const entry of entries) {
+      const bucket = this.getBucketForDate(entry.measuredAt);
+      grouped[bucket].push(entry);
+    }
+
+    return grouped;
+  }
+
+  private static buildWeatherSummaryEntries(
+    weatherRepository: Repository<WeatherEntity>,
+    groupedEntries: Record<TimeBucketKey, WeatherEntity[]>,
+    baseDate: Date,
+  ): WeatherEntity[] {
+    const summaries: WeatherEntity[] = [];
+
+    for (const definition of this.BUCKET_DEFINITIONS) {
+      const entries = groupedEntries[definition.key];
+
+      if (entries.length === 0) {
+        continue;
+      }
+
+      const summary = this.calculateWeatherSummary(entries);
+      const measuredAt = this.createBucketTimestamp(baseDate, definition.startHour);
+
+      const entity = weatherRepository.create({
+        temperature_2m: summary.temperature_2m,
+        apparent_temperature: summary.apparent_temperature,
+        precipitation: summary.precipitation,
+        cloud_cover: summary.cloud_cover,
+        wind_speed_10m: summary.wind_speed_10m,
+        weather_code: summary.weather_code,
+        source: `weather_${definition.source}`,
+        measuredAt,
+      });
+
+      summaries.push(entity);
+    }
+
+    return summaries;
+  }
+
+  private static calculateWeatherSummary(
+    entries: WeatherEntity[],
+  ): WeatherSummary {
+    const count = entries.length;
+
+    return {
+      temperature_2m:
+        entries.reduce((sum, entry) => sum + entry.temperature_2m, 0) / count,
+      apparent_temperature:
+        entries.reduce((sum, entry) => sum + entry.apparent_temperature, 0) / count,
+      precipitation:
+        entries.reduce((sum, entry) => sum + entry.precipitation, 0),
+      cloud_cover:
+        entries.reduce((sum, entry) => sum + entry.cloud_cover, 0) / count,
+      wind_speed_10m:
+        entries.reduce((sum, entry) => sum + entry.wind_speed_10m, 0) / count,
+      weather_code: this.getMostFrequentWeatherCode(
+        entries.map((entry) => entry.weather_code),
+      ),
+    };
+  }
+
+  private static getMostFrequentWeatherCode(codes: number[]): number {
+    const frequency = new Map<number, number>();
+    let mostFrequent = codes[0];
+    let maxCount = 0;
+
+    for (const code of codes) {
+      const count = (frequency.get(code) ?? 0) + 1;
+      frequency.set(code, count);
+
+      if (count > maxCount) {
+        maxCount = count;
+        mostFrequent = code;
+      }
+    }
+
+    return mostFrequent;
+  }
+
+  private static async deleteYesterdayRawWeatherEntries(
+    weatherRepository: Repository<WeatherEntity>,
+    startOfYesterday: Date,
+    startOfToday: Date,
+  ): Promise<void> {
+    await weatherRepository
+      .createQueryBuilder()
+      .delete()
+      .from(WeatherEntity)
+      .where('measuredAt >= :start', { start: startOfYesterday })
+      .andWhere('measuredAt < :end', { end: startOfToday })
+      .andWhere('source NOT LIKE :summaryPrefix', {
+        summaryPrefix: 'weather_summary%',
+      })
+      .execute();
+  }
 }
+

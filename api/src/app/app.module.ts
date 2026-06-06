@@ -6,10 +6,11 @@ import { SensorApiController } from './controller/sensor-api/sensor-api.controll
 import { ScheduleModule } from '@nestjs/schedule';
 import { PvCleanupCronService } from './service/cronJob-service';
 import { ReadDataService } from './service/read-data-service';
+import { WeatherModule } from './weather/weather.module';
 
 
 @Module({
-  imports: [ScheduleModule.forRoot()],
+  imports: [ScheduleModule.forRoot(), WeatherModule],
   controllers: [AppController, WebApiController, SensorApiController],
   providers: [AppService, PvCleanupCronService, ReadDataService],
 })
