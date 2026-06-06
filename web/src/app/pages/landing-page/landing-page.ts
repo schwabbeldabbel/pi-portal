@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,6 +21,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { ApiService } from '../../shared/services/api-service';
 
 @Component({
   selector: 'app-landing-page',
@@ -50,7 +50,9 @@ import {
   standalone: true,
 })
 export class LandingPage {
-  private http = inject(HttpClient);
+
+  private apiService: ApiService = inject(ApiService);
+
 
   protected menuItems = [
     { title: 'Home' },
@@ -59,8 +61,7 @@ export class LandingPage {
     { title: 'Settings' },
   ];
 
-  protected status$: Observable<SystemStatus> =
-    this.http.get<SystemStatus>('http://10.101.1.31:3000/api/getStatus');
+  protected status$: Observable<SystemStatus> = this.apiService.getStatus();
 
   protected selectedMenuItem: string = this.menuItems[0].title;
 

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { AppController } from './controller/app.controller';
 import { AppService } from './app.service';
-import { WebApiController } from './web-api/web-api.controller';
-import { SensorApiController } from './sensor-api/sensor-api.controller';
+import { WebApiController } from './controller/web-api/web-api.controller';
+import { SensorApiController } from './controller/sensor-api/sensor-api.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PvCleanupCronService } from './service/cronJob-service';
 

@@ -1,7 +1,7 @@
 import { Controller, Get, Logger } from '@nestjs/common';
 import { PvData } from 'shared-data';
-import { AppDataSource } from '../../data-source';
-import { PvReadingEntity } from '../../entities/PvEntity';
+import { AppDataSource } from '../../../data-source';
+import { PvReadingEntity } from '../../../entities/PvEntity';
 
 @Controller('web')
 export class WebApiController {

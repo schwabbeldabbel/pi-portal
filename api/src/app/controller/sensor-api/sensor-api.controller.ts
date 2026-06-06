@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { PvReadingEntity } from '../../entities/PvEntity';
-import { AppDataSource } from '../../data-source';
+import { PvReadingEntity } from '../../../entities/PvEntity';
+import { AppDataSource } from '../../../data-source';
 
 @Controller('sensor')
 export class SensorApiController {

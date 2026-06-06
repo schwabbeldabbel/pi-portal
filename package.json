@@ -10,6 +10,7 @@
     "build:api": "nx build api",
     "serve:web": "nx serve web --host=0.0.0.0",
     "serve:api": "nx serve api",
+    "serve:all": "nx run-many -t serve -p web,api",
     "show:projects": "nx show projects"
   },
   "keywords": [],
