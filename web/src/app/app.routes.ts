@@ -5,6 +5,10 @@ export const appRoutes: Route[] = [
     {
         path: '',
         component: LandingPage,
+    },
+    {
+        path: 'data',
+        component: LandingPage,
     }
     
 ];

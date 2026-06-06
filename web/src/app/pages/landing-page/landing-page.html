@@ -33,32 +33,49 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      @if (selectedMenuItem === 'Health') {
-        @if (status$ | async; as status) {
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Health Status</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Name: {{ status.name }}</p>
-              <p>Online: {{ status.online }}</p>
-              <p>Quelle: {{ status.source }}</p>
-              <p>Zeit: {{ status.timestamp }}</p>
-            </ion-card-content>
-          </ion-card>
-        } @else {
-          <ion-card>
-            <ion-card-content class="loading-card">
-              <ion-spinner name="crescent"></ion-spinner>
-              <p>Lade Status</p>
-            </ion-card-content>
-          </ion-card>
+      @switch (selectedMenuItem) {
+        @case (menuItems[1].title) {
+          <p>Data Charts</p>
         }
-      } @else if (selectedMenuItem === 'Pictures') {
-        <p>Bilder</p>
-      } @else {
-        <p>Willkommen auf der Startseite!</p>
+        @case (menuItems[2].title) {
+          @if (status$ | async; as status) {
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Health Status</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p>Name: {{ status.name }}</p>
+                <p>Online: {{ status.online }}</p>
+                <p>Quelle: {{ status.source }}</p>
+                <p>Zeit: {{ status.timestamp }}</p>
+              </ion-card-content>
+            </ion-card>
+          } @else {
+            <ion-card>
+              <ion-card-content class="loading-card">
+                <ion-spinner name="crescent"></ion-spinner>
+                <p>Lade Status</p>
+              </ion-card-content>
+            </ion-card>
+          }
+        }
+        @case (menuItems[3].title) {
+          <p>Settings</p>
+        
+        }  @default {
+          <div>
+            <h2>Viele bunte Widgets</h2>
+            <p>Einfach anklicken und erkunden :O</p>
+          </div>
+          <div class="widget-container">
+            @for (widgetType of widgetTypes; track widgetType) {
+              <app-flat-widget [widgetType]="widgetType"></app-flat-widget>
+            }
+          </div>
+          
+        }
       }
     </ion-content>
   </div>
+
 </ion-split-pane>

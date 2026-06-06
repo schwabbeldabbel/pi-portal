@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SystemStatus } from 'shared-data';
+import { WidgetType } from '../../shared/widget-enum';
 import {
   IonButtons,
   IonCard,
@@ -22,6 +23,8 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { ApiService } from '../../shared/services/api-service';
+import { FlatWidget } from "../../components/flat-widget/flat-widget";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -44,29 +47,38 @@ import { ApiService } from '../../shared/services/api-service';
     IonSplitPane,
     IonTitle,
     IonToolbar,
-  ],
+    FlatWidget
+],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
   standalone: true,
 })
-export class LandingPage {
+export class LandingPage implements OnInit {
 
   private apiService: ApiService = inject(ApiService);
-
+  private router = inject(Router);
 
   protected menuItems = [
     { title: 'Home' },
-    { title: 'Pictures' },
+    { title: 'Data' },
     { title: 'Health' },
     { title: 'Settings' },
   ];
+  protected status$: Observable<SystemStatus>;
+  protected widgetTypes: WidgetType[];
 
-  protected status$: Observable<SystemStatus> = this.apiService.getStatus();
+  ngOnInit(): void {
+    // Initial navigation to the first menu item
+    this.router.navigate([this.menuItems[0].title.toLowerCase()]);
+    // Fetch system status
+    this.status$ = this.apiService.getStatus();
+    this.widgetTypes = Object.values(WidgetType);
+  }
 
   protected selectedMenuItem: string = this.menuItems[0].title;
 
   protected selectMenuItem(title: string): void {
     this.selectedMenuItem = title;
-    console.log(`Selected menu item: ${this.selectedMenuItem}`);
+    this.router.navigate([title.toLowerCase()]);
   }
 }
