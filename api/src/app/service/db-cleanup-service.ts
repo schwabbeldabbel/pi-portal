@@ -1,5 +1,5 @@
 import { AppDataSource } from '../../data-source';
-import { PvReadingEntity } from '../../entities/PvEntity';
+import { PvEntity } from '../../entities/PvEntity';
 
 
 /**
@@ -9,7 +9,7 @@ import { PvReadingEntity } from '../../entities/PvEntity';
 export class DbCleanupService {
   static async cleanupPvData() {
     await AppDataSource.transaction(async (manager) => {
-      const pvRepository = manager.getRepository(PvReadingEntity);
+      const pvRepository = manager.getRepository(PvEntity);
 
       const now = new Date();
 
@@ -53,7 +53,7 @@ export class DbCleanupService {
       await pvRepository
         .createQueryBuilder()
         .delete()
-        .from(PvReadingEntity)
+        .from(PvEntity)
         .where('measuredAt >= :start', { start: startOfYesterday })
         .andWhere('measuredAt < :end', { end: startOfToday })
         .andWhere('source != :source', { source: 'summary' })

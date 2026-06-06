@@ -1,8 +1,10 @@
 <ion-card class="flat-widget">
     <ion-card-header>
-      <ion-card-title>{{ widgetType }}</ion-card-title>
+      <ion-card-title>{{ data.type }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p>Dies ist ein einfaches Flat Widget.</p>
+        @for( entry of data.data; track entry.key) {
+            <p>{{ entry.key }}: {{ entry.value }}</p>
+        }
     </ion-card-content>
 </ion-card>

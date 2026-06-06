@@ -1,16 +1,16 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { PvReadingEntity } from '../../../entities/PvEntity';
+import { PvEntity } from '../../../entities/PvEntity';
 import { AppDataSource } from '../../../data-source';
 
 @Controller('sensor')
 export class SensorApiController {
 
     @Post('write/solar/values')
-    async setPvData(@Body() data: PvReadingEntity) {
+    async setPvData(@Body() data: PvEntity) {
         try {
             console.log('Received PV Data');
 
-            const pvRepository = AppDataSource.getRepository(PvReadingEntity);
+            const pvRepository = AppDataSource.getRepository(PvEntity);
             const pvEntry = pvRepository.create(data);
             const savedEntry = await pvRepository.save(pvEntry);
 

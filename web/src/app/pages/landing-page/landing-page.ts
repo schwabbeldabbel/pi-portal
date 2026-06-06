@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, switchMap, timer } from 'rxjs';
 import { SystemStatus } from 'shared-data';
-import { WidgetType } from '../../shared/widget-enum';
 import {
   IonButtons,
   IonCard,
@@ -25,6 +24,7 @@ import {
 import { ApiService } from '../../shared/services/api-service';
 import { FlatWidget } from "../../components/flat-widget/flat-widget";
 import { Router } from '@angular/router';
+import { FlatWidgetData } from 'shared-data';
 
 @Component({
   selector: 'app-landing-page',
@@ -65,15 +65,19 @@ export class LandingPage implements OnInit {
     { title: 'Settings' },
   ];
   protected status$: Observable<SystemStatus>;
-  protected widgetTypes: WidgetType[];
+  protected widgetData$: Observable<FlatWidgetData[]>;
 
   ngOnInit(): void {
     // Initial navigation to the first menu item
     this.router.navigate([this.menuItems[0].title.toLowerCase()]);
+
     // Fetch system status
     this.status$ = this.apiService.getStatus();
-    this.widgetTypes = Object.values(WidgetType);
-  }
+    this.widgetData$ = timer(0, 5000).pipe(
+        switchMap(() => this.apiService.getWidgetData()),
+        catchError(() => of([]))
+      );  
+    }
 
   protected selectedMenuItem: string = this.menuItems[0].title;
 

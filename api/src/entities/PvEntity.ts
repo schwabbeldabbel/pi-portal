@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm"
 
 @Entity('pv_data')
-export class PvReadingEntity {
+export class PvEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 

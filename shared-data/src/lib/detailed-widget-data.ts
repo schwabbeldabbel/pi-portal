@@ -6,3 +6,5 @@ export interface PvData {
     source: string;
     measuredAt: string;
 }
+
+

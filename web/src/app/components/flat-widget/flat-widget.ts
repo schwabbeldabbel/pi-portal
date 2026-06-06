@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/angular/standalone';
-import { WidgetType } from '../../shared/widget-enum';
+import { FlatWidgetData } from 'shared-data';
 
 @Component({
   selector: 'app-flat-widget',
@@ -16,6 +16,7 @@ import { WidgetType } from '../../shared/widget-enum';
 })
 export class FlatWidget {
 
+  @Input() data: FlatWidgetData = new FlatWidgetData();
 
-  @Input() widgetType: WidgetType;
+
 }

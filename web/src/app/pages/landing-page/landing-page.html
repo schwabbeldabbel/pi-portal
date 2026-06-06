@@ -68,8 +68,10 @@
             <p>Einfach anklicken und erkunden :O</p>
           </div>
           <div class="widget-container">
-            @for (widgetType of widgetTypes; track widgetType) {
-              <app-flat-widget [widgetType]="widgetType"></app-flat-widget>
+            @if (widgetData$ | async; as widgetDataArray) {
+              @for(widgetData of widgetDataArray; track widgetData.data) {
+                <app-flat-widget [data]="widgetData"></app-flat-widget>
+              }
             }
           </div>
           
