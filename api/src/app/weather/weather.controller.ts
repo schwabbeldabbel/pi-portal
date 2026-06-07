@@ -10,8 +10,4 @@ export class WeatherController {
     return this.weatherService.getRecentWeather();
   }
 
-  @Get('forecast')
-  getForecast() {
-    return this.weatherService.getForecast();
-  }
 }

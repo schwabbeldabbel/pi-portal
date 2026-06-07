@@ -6,6 +6,7 @@ import { AppDataSource } from '../../data-source';
 
 @Injectable()
 export class WeatherService {
+    private readonly logger = new Logger(WeatherService.name);
     private readonly latitude = 52.299172;
     private readonly longitude = 10.542496;
     private readonly timezone = 'Europe/Berlin';
@@ -29,40 +30,29 @@ export class WeatherService {
             weather_code: data.minutely_15.weather_code?.[i] ?? null,
             }));
 
-        await this.weatherRepository
+        const result = await this.weatherRepository
             .createQueryBuilder()
             .insert()
             .into(WeatherEntity)
             .values(rows)
             .orIgnore()
+            .updateEntity(false)
             .execute();
-    }    
 
-    async getRecentWeather() {
-        const url =
-            'https://api.open-meteo.com/v1/forecast' +
-            `?latitude=${this.latitude}` +
-            `&longitude=${this.longitude}` +
-            `&timezone=${encodeURIComponent(this.timezone)}` +
-            '&models=icon_d2' +
-            '&minutely_15=temperature_2m,apparent_temperature,precipitation,cloud_cover,wind_speed_10m,weather_code' +
-            '&past_minutely_15=12' +
-            '&forecast_minutely_15=0';
-
-        const response = await firstValueFrom(this.httpService.get(url));
-        Logger.log('Fetched recent weather data:', response.data);
-        return response.data;
+        this.logger.log(`Weather import finished. attempted=${rows.length}`);
+        this.logger.debug(JSON.stringify(result));
     }
 
-    async getForecast() {
+    async getRecentWeather() {
         const url =
         'https://api.open-meteo.com/v1/forecast' +
         `?latitude=${this.latitude}` +
         `&longitude=${this.longitude}` +
         `&timezone=${encodeURIComponent(this.timezone)}` +
-        '&current=temperature_2m,apparent_temperature,precipitation,cloud_cover,wind_speed_10m,weather_code' +
-        '&hourly=temperature_2m,precipitation_probability,cloud_cover,shortwave_radiation,wind_speed_10m' +
-        '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,shortwave_radiation_sum';
+        '&models=icon_d2' +
+        '&minutely_15=temperature_2m,apparent_temperature,precipitation,cloud_cover,wind_speed_10m,weather_code' +
+        '&past_minutely_15=12' +
+        '&forecast_minutely_15=0';
 
         const response = await firstValueFrom(this.httpService.get(url));
         return response.data;
