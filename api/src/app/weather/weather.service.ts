@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { WeatherEntity } from '../../entities/WeatherEntity';
@@ -11,38 +11,46 @@ export class WeatherService {
     private readonly timezone = 'Europe/Berlin';
     private readonly weatherRepository = AppDataSource.getRepository(WeatherEntity);
 
+    constructor(private readonly httpService: HttpService) {}
 
-    constructor(private readonly httpService: HttpService,) {}
+    async fetchAndStoreRecentWeather() {
+        const data = await this.getRecentWeather();
 
-    /**
-     * Fetches and stores weather data and stores it in the database.
-     */
-    async fetchAndStoreCurrentWeather() {
-        const currentWeather = await this.getCurrentWeather();
+        if (!data?.minutely_15?.time?.length) return;
 
-        const entity = this.weatherRepository.create({
-            temperature_2m: currentWeather.current.temperature_2m,
-            apparent_temperature: currentWeather.current.apparent_temperature,
-            precipitation: currentWeather.current.precipitation,
-            cloud_cover: currentWeather.current.cloud_cover,
-            wind_speed_10m: currentWeather.current.wind_speed_10m,
-            weather_code: currentWeather.current.weather_code,
+        const rows = data.minutely_15.time.map((time: string, i: number) => ({
+            measuredAt: new Date(time),
             source: 'open-meteo',
-            measuredAt: new Date(currentWeather.current.time),
-        });
+            temperature_2m: data.minutely_15.temperature_2m?.[i] ?? null,
+            apparent_temperature: data.minutely_15.apparent_temperature?.[i] ?? null,
+            precipitation: data.minutely_15.precipitation?.[i] ?? null,
+            cloud_cover: data.minutely_15.cloud_cover?.[i] ?? null,
+            wind_speed_10m: data.minutely_15.wind_speed_10m?.[i] ?? null,
+            weather_code: data.minutely_15.weather_code?.[i] ?? null,
+            }));
 
-        await this.weatherRepository.save(entity);
-    }
+        await this.weatherRepository
+            .createQueryBuilder()
+            .insert()
+            .into(WeatherEntity)
+            .values(rows)
+            .orIgnore()
+            .execute();
+    }    
 
-    async getCurrentWeather() {
+    async getRecentWeather() {
         const url =
-        'https://api.open-meteo.com/v1/forecast' +
-        `?latitude=${this.latitude}` +
-        `&longitude=${this.longitude}` +
-        `&timezone=${encodeURIComponent(this.timezone)}` +
-        '&current=temperature_2m,apparent_temperature,precipitation,cloud_cover,wind_speed_10m,weather_code';
+            'https://api.open-meteo.com/v1/forecast' +
+            `?latitude=${this.latitude}` +
+            `&longitude=${this.longitude}` +
+            `&timezone=${encodeURIComponent(this.timezone)}` +
+            '&models=icon_d2' +
+            '&minutely_15=temperature_2m,apparent_temperature,precipitation,cloud_cover,wind_speed_10m,weather_code' +
+            '&past_minutely_15=12' +
+            '&forecast_minutely_15=0';
 
         const response = await firstValueFrom(this.httpService.get(url));
+        Logger.log('Fetched recent weather data:', response.data);
         return response.data;
     }
 
@@ -59,4 +67,4 @@ export class WeatherService {
         const response = await firstValueFrom(this.httpService.get(url));
         return response.data;
     }
-    }
+}

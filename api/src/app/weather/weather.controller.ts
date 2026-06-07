@@ -5,9 +5,9 @@ import { WeatherService } from './weather.service';
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
 
-  @Get('current')
-  getCurrentWeather() {
-    return this.weatherService.getCurrentWeather();
+  @Get('recent')
+  getRecentWeather() {
+    return this.weatherService.getRecentWeather();
   }
 
   @Get('forecast')

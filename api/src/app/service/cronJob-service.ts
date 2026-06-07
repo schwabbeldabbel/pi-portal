@@ -40,13 +40,13 @@ export class WeatherCronService {
 
   constructor(private readonly weatherService: WeatherService) {}
 
-  @Cron(CronExpression.EVERY_10_MINUTES, {
+  @Cron(CronExpression.EVERY_10_SECONDS, {
     name: 'weather-import-every-10-minutes',
     timeZone: 'Europe/Berlin',
   })
   async handleWeatherImport() {
     this.logger.log('Starting weather import...');
-    await this.weatherService.fetchAndStoreCurrentWeather();
+    await this.weatherService.fetchAndStoreRecentWeather();
     this.logger.log('Weather import finished.');
   }
 }

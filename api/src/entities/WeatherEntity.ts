@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique } from "typeorm"
 
 @Entity('weather_data')
+@Unique('UQ_weather_source_measuredAt', ['source', 'measuredAt'])
 export class WeatherEntity {
   @PrimaryGeneratedColumn()
   id!: number;
