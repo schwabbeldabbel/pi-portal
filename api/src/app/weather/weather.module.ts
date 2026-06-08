@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import { WeatherController } from './weather.controller';
 import { HttpModule } from '@nestjs/axios';
-import { WeatherCronService, WeatherDataCleanupCronService } from '../service/cronJob-service';
+import { WeatherCronService } from '../service/cronJob-service';
 
 
 @Module({
@@ -13,7 +13,7 @@ import { WeatherCronService, WeatherDataCleanupCronService } from '../service/cr
     }),
   ],
   controllers: [WeatherController],
-  providers: [WeatherService, WeatherCronService, WeatherDataCleanupCronService,],
+  providers: [WeatherService, WeatherCronService],
   exports: [WeatherService],
 })
 export class WeatherModule {}
