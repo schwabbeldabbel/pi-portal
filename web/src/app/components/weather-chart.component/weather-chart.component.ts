@@ -28,8 +28,13 @@ export class WeatherChartComponent implements OnInit {
 
   renderChart(dataArray: WeatherData[]): void {
     const temperatures = dataArray.map(data => [new Date(data.measuredAt).getTime(), data.temperature]);
+    const precipitation = dataArray.map(data => [new Date(data.measuredAt).getTime(), data.precipitation]);
+    const cloudCover = dataArray.map(data => [new Date(data.measuredAt).getTime(), data.cloudCover]);
+    const windSpeed = dataArray.map(data => [new Date(data.measuredAt).getTime(), data.windSpeed]);
+    const weatherCode = dataArray.map(data => [new Date(data.measuredAt).getTime(), data.weatherCode]);
+
     this.chart = Highcharts.chart('container', {
-      title: {
+    title: {
         text: 'Das Wetter im Zeitverlauf'
       },
       xAxis: {
@@ -38,15 +43,46 @@ export class WeatherChartComponent implements OnInit {
           text: 'Zeit'
         }
       },
-      yAxis: {
-        title: {
-          text: 'Temperatur (°C)'
+      yAxis: [
+        {
+          title: {
+            text: 'Temperatur (°C)'
+          },
+        },
+        {
+          title: {
+            text: 'Regen in (mm)'
+          }
+        },
+        {
+          title: {
+            text: 'Wolkendichte (%)'
+          }
+        },
+        {
+          title: {
+            text: 'Windgeschwindigkeit (km/h)'
+          }
         }
-      },
-      series: [{
-        name: 'Temperatur',
-        data: temperatures
-      }]
+      ],
+      series: [
+        {
+          name: 'Temperatur',
+          data: temperatures
+        },
+        {
+          name: 'Regen',
+          data: precipitation
+        },
+        {
+          name: 'Wolkendichte',
+          data: cloudCover
+        },
+        {
+          name: 'Windgeschwindigkeit',
+          data: windSpeed
+        }
+      ]
     });
   }
 }
