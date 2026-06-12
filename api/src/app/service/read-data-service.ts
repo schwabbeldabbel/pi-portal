@@ -17,7 +17,7 @@ export class ReadDataService {
         const weatherRepository = AppDataSource.getRepository(WeatherEntity);
         const weatherData = await weatherRepository
             .createQueryBuilder('weather')
-            .orderBy('weather.createdAt', 'DESC')
+            .orderBy('weather.measuredAt', 'DESC')
             .getMany();
         return mapWeatherEntityToDetailedWeatherData(weatherData);
     }
