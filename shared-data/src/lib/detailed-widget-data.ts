@@ -8,3 +8,13 @@ export interface PvData {
 }
 
 
+export interface WeatherData {
+    temperature: number;
+    apparentTemperature: number;
+    precipitation: number;
+    cloudCover: number;
+    windSpeed: number;
+    weatherCode: string;
+    source: string;
+    measuredAt: string;
+}

@@ -1,4 +1,4 @@
-import { FlatWidgetData, WidgetType } from "shared-data";
+import { FlatWidgetData, WeatherData, WidgetType } from "shared-data";
 import { PvEntity } from "../../entities/PvEntity";
 import { WeatherEntity } from "../../entities/WeatherEntity";
 import { getWeatherCodeLabel } from "../weather/weather-code.enum";
@@ -31,3 +31,21 @@ export function mapWeatherEntityToFlatWidgetData(weatherData: WeatherEntity): Fl
     return widgetData;
 }
 
+export function mapWeatherEntityToDetailedWeatherData(weatherData: WeatherEntity[]): WeatherData[] {
+    const detailedWeatherData: WeatherData[] = [];
+    for(const weather of weatherData) {
+        const weatherDetail: WeatherData = {
+            temperature: weather.temperature_2m,
+            apparentTemperature: weather.apparent_temperature,
+            precipitation: weather.precipitation,
+            cloudCover: weather.cloud_cover,
+            windSpeed: weather.wind_speed_10m,
+            weatherCode: getWeatherCodeLabel(weather.weather_code) || "",
+            source: weather.source,
+            measuredAt: weather.measuredAt.toISOString(),
+        };
+        detailedWeatherData.push(weatherDetail);
+    }
+    return detailedWeatherData;
+}
+   

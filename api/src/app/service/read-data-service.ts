@@ -1,8 +1,7 @@
-import { Logger } from "@nestjs/common";
-import { FlatWidgetData } from "shared-data";
+import { FlatWidgetData, WeatherData } from "shared-data";
 import { AppDataSource } from "../../data-source";
 import { PvEntity } from "../../entities/PvEntity";
-import { mapPvEntityToFlatWidgetData, mapWeatherEntityToFlatWidgetData } from "./mapper";
+import { mapPvEntityToFlatWidgetData, mapWeatherEntityToDetailedWeatherData, mapWeatherEntityToFlatWidgetData } from "./mapper";
 import { WeatherEntity } from "../../entities/WeatherEntity";
 
 export class ReadDataService {
@@ -12,6 +11,15 @@ export class ReadDataService {
         await this.readPvRepo(widgetData);
         await this.readWeatherRepo(widgetData);
         return widgetData;
+    }
+
+    async readWeatherDetailedData(): Promise<WeatherData[]> {
+        const weatherRepository = AppDataSource.getRepository(WeatherEntity);
+        const weatherData = await weatherRepository
+            .createQueryBuilder('weather')
+            .orderBy('weather.createdAt', 'DESC')
+            .getMany();
+        return mapWeatherEntityToDetailedWeatherData(weatherData);
     }
 
     private async readPvRepo(widgetData: FlatWidgetData[]) {

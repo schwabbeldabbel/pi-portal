@@ -35,7 +35,8 @@
     <ion-content class="ion-padding">
       @switch (selectedMenuItem) {
         @case (menuItems[1].title) {
-          <p>Data Charts</p>
+          <h1>Data Charts</h1>
+          <app-weather-chart></app-weather-chart>
         }
         @case (menuItems[2].title) {
           @if (status$ | async; as status) {

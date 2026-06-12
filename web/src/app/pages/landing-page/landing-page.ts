@@ -25,6 +25,7 @@ import { ApiService } from '../../shared/services/api-service';
 import { FlatWidget } from "../../components/flat-widget/flat-widget";
 import { Router } from '@angular/router';
 import { FlatWidgetData } from 'shared-data';
+import { WeatherChartComponent } from '../../components/weather-chart.component/weather-chart.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -47,7 +48,8 @@ import { FlatWidgetData } from 'shared-data';
     IonSplitPane,
     IonTitle,
     IonToolbar,
-    FlatWidget
+    FlatWidget,
+    WeatherChartComponent
 ],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
