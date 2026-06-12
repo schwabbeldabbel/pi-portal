@@ -71,32 +71,79 @@ export class WeatherChartComponent implements OnInit {
       },
       yAxis: [
         {
+          id: 'temperature-axis',
           title: { text: 'Temperatur (°C)' },
-          opposite: false
+          opposite: false,
+          visible: true,
+          min: 0
         },
         {
+          id: 'precipitation-axis',
           title: { text: 'Regen (mm)' },
-          opposite: true
-        },
-        {
-          title: { text: 'Wolkendichte (%)' },
-          max: 100,
+          opposite: true,
+          visible: true,
           min: 0,
-          opposite: true
+          offset: 0
         },
         {
+          id: 'cloud-axis',
+          title: { text: 'Wolkendichte (%)' },
+          opposite: true,
+          visible: true,
+          min: 0,
+          max: 100,
+          offset: 60
+        },
+        {
+          id: 'wind-axis',
           title: { text: 'Windgeschwindigkeit (km/h)' },
-          opposite: false
+          opposite: true,
+          visible: true,
+          min: 0,
+          offset: 120
         }
       ],
+      plotOptions: {
+        series: {
+          events: {
+            legendItemClick: function () {
+              // eslint-disable-next-line @typescript-eslint/no-this-alias
+              const clickedSeries = this;
+              const chart = clickedSeries.chart;
+
+              setTimeout(() => {
+                chart.yAxis.forEach((axis, currentAxisIndex) => {
+                  const hasVisibleSeries = chart.series.some(series => {
+                    const seriesAxisIndex =
+                      typeof series.options.yAxis === 'number'
+                        ? series.options.yAxis
+                        : 0;
+
+                    return seriesAxisIndex === currentAxisIndex && series.visible;
+                  });
+
+                  axis.update({ visible: hasVisibleSeries }, false);
+                });
+
+                chart.redraw();
+              }, 0);
+
+              return true;
+            }
+          }
+        },
+        column: {
+          borderWidth: 0
+        }
+      },
       series: [
         {
           type: 'spline',
           name: 'Temperatur',
           data: temperatures,
-          color: '#ff0000',
           yAxis: 0,
-          tooltip: { valueSuffix: ' °C' }
+          tooltip: { valueSuffix: ' °C' },
+          color: '#e53935'
         },
         {
           type: 'column',
@@ -105,8 +152,8 @@ export class WeatherChartComponent implements OnInit {
           yAxis: 1,
           tooltip: { valueSuffix: ' mm' },
           maxPointWidth: 8,
-          borderWidth: 0,
-          pointPadding: 0.05
+          pointPadding: 0.05,
+          color: '#42a5f5'
         },
         {
           type: 'line',
@@ -114,19 +161,20 @@ export class WeatherChartComponent implements OnInit {
           data: cloudCover,
           yAxis: 2,
           tooltip: { valueSuffix: ' %' },
-          color: '#607d8b',
-          dashStyle: 'ShortDot',
+          color: '#78909c',
+          dashStyle: 'ShortDash',
           lineWidth: 2,
-          marker: {
-            enabled: false
-          }
+          marker: { enabled: false }
         },
         {
           type: 'line',
           name: 'Windgeschwindigkeit',
           data: windSpeed,
           yAxis: 3,
-          tooltip: { valueSuffix: ' km/h' }
+          tooltip: { valueSuffix: ' km/h' },
+          color: '#8d6e63',
+          lineWidth: 2,
+          marker: { enabled: false }
         }
       ]
     });
