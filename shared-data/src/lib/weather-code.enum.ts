@@ -116,3 +116,45 @@ export function getWeatherCodeLabel(code: WeatherCode | number): string {
       return 'Unbekannter Wettercode';
   }
 }
+
+const weatherColorMapOpacity = 0.3;
+
+export const weatherColorMap: Record<number, string> = {
+  [WeatherCode.ClearSky]: `rgba(255, 193, 7, ${weatherColorMapOpacity})`,
+  [WeatherCode.MainlyClear]: `rgba(255, 214, 79, ${weatherColorMapOpacity})`,
+  [WeatherCode.PartlyCloudy]: `rgba(203, 226, 230, ${weatherColorMapOpacity})`,
+  [WeatherCode.Overcast]: `rgba(120, 144, 156, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.Fog]: `rgba(189, 189, 189, ${weatherColorMapOpacity})`,
+  [WeatherCode.DepositingRimeFog]: `rgba(207, 216, 220, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.DrizzleLight]: `rgba(129, 212, 250, ${weatherColorMapOpacity})`,
+  [WeatherCode.DrizzleModerate]: `rgba(79, 195, 247, ${weatherColorMapOpacity})`,
+  [WeatherCode.DrizzleDense]: `rgba(41, 182, 246, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.FreezingDrizzleLight]: `rgba(144, 202, 249, ${weatherColorMapOpacity})`,
+  [WeatherCode.FreezingDrizzleDense]: `rgba(100, 181, 246, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.RainSlight]: `rgba(66, 164, 245, ${weatherColorMapOpacity})`,
+  [WeatherCode.RainModerate]: `rgba(30, 136, 229, ${weatherColorMapOpacity})`,
+  [WeatherCode.RainHeavy]: `rgba(21, 101, 192, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.FreezingRainLight]: `rgba(92, 107, 192, ${weatherColorMapOpacity})`,
+  [WeatherCode.FreezingRainHeavy]: `rgba(63, 81, 181, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.SnowFallSlight]: `rgba(224, 247, 250, ${weatherColorMapOpacity})`,
+  [WeatherCode.SnowFallModerate]: `rgba(179, 229, 252, ${weatherColorMapOpacity})`,
+  [WeatherCode.SnowFallHeavy]: `rgba(129, 212, 250, ${weatherColorMapOpacity})`,
+  [WeatherCode.SnowGrains]: `rgba(240, 248, 255, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.RainShowersSlight]: `rgba(3, 169, 244, ${weatherColorMapOpacity})`,
+  [WeatherCode.RainShowersModerate]: `rgba(2, 136, 209, ${weatherColorMapOpacity})`,
+  [WeatherCode.RainShowersViolent]: `rgba(1, 87, 155, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.SnowShowersSlight]: `rgba(186, 230, 253, ${weatherColorMapOpacity})`,
+  [WeatherCode.SnowShowersHeavy]: `rgba(125, 211, 252, ${weatherColorMapOpacity})`,
+
+  [WeatherCode.ThunderstormSlightOrModerate]: `rgba(255, 152, 0, ${weatherColorMapOpacity})`,
+  [WeatherCode.ThunderstormWithSlightHail]: `rgba(255, 112, 67, ${weatherColorMapOpacity})`,
+  [WeatherCode.ThunderstormWithHeavyHail]: `rgba(244, 67, 54, ${weatherColorMapOpacity})`,
+};

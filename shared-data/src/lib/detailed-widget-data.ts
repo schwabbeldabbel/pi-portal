@@ -14,7 +14,7 @@ export interface WeatherData {
     precipitation: number;
     cloudCover: number;
     windSpeed: number;
-    weatherCode: string;
+    weatherCode: number;
     source: string;
     measuredAt: string;
 }
