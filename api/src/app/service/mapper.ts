@@ -50,17 +50,19 @@ export function mapWeatherEntityToDetailedWeatherData(weatherData: WeatherEntity
    
 export function mapWeatherEntityToDetailedPvData(pvData: PvEntity[]): PvData[] {
     const detailedPvData: PvData[] = [];
-    for(const pv of pvData) {
-        const pvDetail: PvData = {
+    for (const pv of pvData) {
+        const measuredAt = new Date(pv.measuredAt);
+        if (isNaN(measuredAt.getTime())) {
+            continue;
+        }
+        detailedPvData.push({
             voltage: pv.voltage,
             current: pv.current,
             power: pv.power,
             shuntVoltageMv: pv.shuntVoltageMv,
             source: pv.source,
-            measuredAt: pv.measuredAt.toISOString(),
-        };
-        detailedPvData.push(pvDetail);
+            measuredAt: measuredAt.toISOString(),
+        });
     }
     return detailedPvData;
 }
-   
