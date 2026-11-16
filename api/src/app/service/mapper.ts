@@ -57,7 +57,7 @@ export function mapWeatherEntityToDetailedPvData(pvData: PvEntity[]): PvData[] {
         }
         detailedPvData.push({
             voltage: pv.voltage,
-            current: pv.current,
+            current: pv.current < 0 ? -pv.current : pv.current,
             power: pv.power,
             shuntVoltageMv: pv.shuntVoltageMv,
             source: pv.source,
