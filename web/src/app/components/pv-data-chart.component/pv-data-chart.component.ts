@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import Highcharts from 'highcharts';
 import { Chart } from 'highcharts';
 import { ApiService } from '../../shared/services/api-service';
-import { WeatherData, weatherColorMap } from 'shared-data';
+import { PvData } from 'shared-data';
 
 @Component({
   selector: 'app-pv-data-chart',
@@ -10,7 +10,7 @@ import { WeatherData, weatherColorMap } from 'shared-data';
   templateUrl: './pv-data-chart.component.html',
   styleUrls: ['./pv-data-chart.component.css']
 })
-export class PvDataChartComponent implements OnInit {
+export class PvDataChartComponent implements OnInit, OnDestroy {
 
   chart: Chart | undefined;
   private apiService: ApiService = inject(ApiService);
@@ -19,88 +19,55 @@ export class PvDataChartComponent implements OnInit {
     this.fetchPvData();
   }
 
+  ngOnDestroy(): void {
+    this.chart?.destroy();
+  }
+
   fetchPvData(): void {
-    this.apiService.getPvDetailData().subscribe(data => {
-      console.log('Received PV data:', data);
+    this.apiService.getPvDetailData().subscribe((data: PvData[]) => {
       this.renderChart(data);
     });
   }
 
-  renderChart(dataArray: WeatherData[]): void {
-    const temperatures = dataArray.map(data =>
-      [new Date(data.measuredAt).getTime(), data.temperature] as [number, number]
-    );
+  private toSeries(
+    dataArray: PvData[],
+    key: 'current' | 'voltage' | 'power'
+  ): [number, number][] {
+    return dataArray
+      .map(d => [new Date(d.measuredAt).getTime(), d[key]] as [number, number])
+      .sort((a, b) => a[0] - b[0]);
+  }
 
-    const precipitation = dataArray.map(data =>
-      [new Date(data.measuredAt).getTime(), data.precipitation] as [number, number]
-    );
+  renderChart(dataArray: PvData[]): void {
+    const current = this.toSeries(dataArray, 'current');
+    const voltage = this.toSeries(dataArray, 'voltage');
+    const power = this.toSeries(dataArray, 'power');
 
-    const cloudCover = dataArray.map(data =>
-      [new Date(data.measuredAt).getTime(), data.cloudCover] as [number, number]
-    );
-
-    const windSpeed = dataArray.map(data =>
-      [new Date(data.measuredAt).getTime(), data.windSpeed] as [number, number]
-    );
-
-    const weatherCode = dataArray.map(data =>
-      [new Date(data.measuredAt).getTime(), data.weatherCode] as [number, number]
-    );
-
-    const plotBands = weatherCode.slice(0, -1).map(([from, code], index) => {
-      const [to] = weatherCode[index + 1];
-
-      return {
-        from,
-        to,
-        color: weatherColorMap[code] || 'rgba(200,200,200,0.08)'
-      };
-    });
+    this.chart?.destroy();
 
     this.chart = Highcharts.chart('container', {
-      chart: {
-        zoomType: 'x'
-      },
-      title: {
-        text: 'Das Wetter im Zeitverlauf'
-      },
+      chart: { zoomType: 'x' },
+      title: { text: 'PV-Messung im Zeitverlauf' },
       xAxis: {
         type: 'datetime',
-        title: { text: 'Zeit' },
-        plotBands
+        title: { text: 'Zeit' }
       },
       yAxis: [
         {
-          id: 'temperature-axis',
-          title: { text: 'Temperatur (°C)' },
+          title: { text: 'Kurzschlussstrom (mA)' },
           opposite: false,
-          visible: true,
           min: 0
         },
         {
-          id: 'precipitation-axis',
-          title: { text: 'Regen (mm)' },
+          title: { text: 'Spannung (V)' },
           opposite: true,
-          visible: true,
-          min: 0,
-          offset: 0
+          min: 0
         },
         {
-          id: 'cloud-axis',
-          title: { text: 'Wolkendichte (%)' },
+          title: { text: 'Leistung (mW)' },
           opposite: true,
-          visible: true,
           min: 0,
-          max: 100,
           offset: 60
-        },
-        {
-          id: 'wind-axis',
-          title: { text: 'Windgeschwindigkeit (km/h)' },
-          opposite: true,
-          visible: true,
-          min: 0,
-          offset: 120
         }
       ],
       plotOptions: {
@@ -118,62 +85,45 @@ export class PvDataChartComponent implements OnInit {
                       typeof series.options.yAxis === 'number'
                         ? series.options.yAxis
                         : 0;
-
                     return seriesAxisIndex === currentAxisIndex && series.visible;
                   });
-
                   axis.update({ visible: hasVisibleSeries }, false);
                 });
-
                 chart.redraw();
               }, 0);
 
               return true;
             }
           }
-        },
-        column: {
-          borderWidth: 0
         }
       },
       series: [
         {
           type: 'spline',
-          name: 'Temperatur',
-          data: temperatures,
+          name: 'Strom (Isc)',
+          data: current,
           yAxis: 0,
-          tooltip: { valueSuffix: ' °C' },
-          color: '#e53935'
-        },
-        {
-          type: 'column',
-          name: 'Regen',
-          data: precipitation,
-          yAxis: 1,
-          tooltip: { valueSuffix: ' mm' },
-          maxPointWidth: 8,
-          pointPadding: 0.05,
-          color: '#42a5f5'
-        },
-        {
-          type: 'line',
-          name: 'Wolkendichte',
-          data: cloudCover,
-          yAxis: 2,
-          tooltip: { valueSuffix: ' %' },
-          color: '#78909c',
-          dashStyle: 'ShortDash',
-          lineWidth: 2,
+          tooltip: { valueSuffix: ' mA' },
+          color: '#fb8c00',
           marker: { enabled: false }
         },
         {
           type: 'line',
-          name: 'Windgeschwindigkeit',
-          data: windSpeed,
-          yAxis: 3,
-          tooltip: { valueSuffix: ' km/h' },
-          color: '#8d6e63',
-          lineWidth: 2,
+          name: 'Spannung',
+          data: voltage,
+          yAxis: 1,
+          tooltip: { valueSuffix: ' V' },
+          color: '#42a5f5',
+          dashStyle: 'ShortDash',
+          marker: { enabled: false }
+        },
+        {
+          type: 'line',
+          name: 'Leistung',
+          data: power,
+          yAxis: 2,
+          tooltip: { valueSuffix: ' mW' },
+          color: '#43a047',
           marker: { enabled: false }
         }
       ]

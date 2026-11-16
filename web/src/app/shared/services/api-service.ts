@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { SystemStatus, FlatWidgetData, WeatherData } from 'shared-data';
+import { SystemStatus, FlatWidgetData, WeatherData, PvData } from 'shared-data';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class ApiService {
       return this.http.get<WeatherData[]>('/api/web/getWeatherDetailData');
     }
     
-    getPvDetailData(): Observable<WeatherData[]> {
-      return this.http.get<WeatherData[]>('/api/web/getPvDetailData');
+    getPvDetailData(): Observable<PvData[]> {
+      return this.http.get<PvData[]>('/api/web/getPvDetailData');
     }
 }
