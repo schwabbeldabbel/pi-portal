@@ -37,6 +37,7 @@
         @case (menuItems[1].title) {
           <h1>Data Charts</h1>
           <app-weather-chart></app-weather-chart>
+          <app-pv-data-chart></app-pv-data-chart>
         }
         @case (menuItems[2].title) {
           @if (status$ | async; as status) {

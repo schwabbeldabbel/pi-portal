@@ -26,6 +26,7 @@ export class PvDataChartComponent implements OnInit, OnDestroy {
   fetchPvData(): void {
     this.apiService.getPvDetailData().subscribe((data: PvData[]) => {
       this.renderChart(data);
+      console.log(`Fetched ${data.length} PV data entries`);
     });
   }
 

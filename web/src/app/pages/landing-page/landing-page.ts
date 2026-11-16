@@ -26,6 +26,7 @@ import { FlatWidget } from "../../components/flat-widget/flat-widget";
 import { Router } from '@angular/router';
 import { FlatWidgetData } from 'shared-data';
 import { WeatherChartComponent } from '../../components/weather-chart.component/weather-chart.component';
+import { PvDataChartComponent } from '../../components/pv-data-chart.component/pv-data-chart.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -49,7 +50,8 @@ import { WeatherChartComponent } from '../../components/weather-chart.component/
     IonTitle,
     IonToolbar,
     FlatWidget,
-    WeatherChartComponent
+    WeatherChartComponent,
+    PvDataChartComponent
 ],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
