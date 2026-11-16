@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Logger } from '@nestjs/common';
-import { FlatWidgetData, WeatherData } from 'shared-data';
+import { FlatWidgetData, PvData, WeatherData } from 'shared-data';
 import { ReadDataService } from '../../service/read-data-service';
 
 @Controller('web')
@@ -26,7 +26,7 @@ export class WebApiController {
         return data;
     }
     @Get('getPvDetailData')
-    async getPvDetailData(): Promise<WeatherData[]> {
+    async getPvDetailData(): Promise<PvData[]> {
         this.logger.log('Received request for PV detail data');
         const data = await this.readDataService.readPvDetailedData();
         this.logger.log(`Fetched ${data.length} PV detail data entries`);
