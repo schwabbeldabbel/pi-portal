@@ -1,4 +1,4 @@
-import { FlatWidgetData, getWeatherCodeLabel, WeatherData, WidgetType } from "shared-data";
+import { FlatWidgetData, getWeatherCodeLabel, PvData, WeatherData, WidgetType } from "shared-data";
 import { PvEntity } from "../../entities/PvEntity";
 import { WeatherEntity } from "../../entities/WeatherEntity";
 
@@ -46,5 +46,21 @@ export function mapWeatherEntityToDetailedWeatherData(weatherData: WeatherEntity
         detailedWeatherData.push(weatherDetail);
     }
     return detailedWeatherData;
+}
+   
+export function mapWeatherEntityToDetailedPvData(pvData: PvEntity[]): PvData[] {
+    const detailedPvData: PvData[] = [];
+    for(const pv of pvData) {
+        const pvDetail: PvData = {
+            voltage: pv.voltage,
+            current: pv.current,
+            power: pv.power,
+            shuntVoltageMv: pv.shuntVoltageMv,
+            source: pv.source,
+            measuredAt: pv.measuredAt.toISOString(),
+        };
+        detailedPvData.push(pvDetail);
+    }
+    return detailedPvData;
 }
    

@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const corsOrigins = [
     "http://localhost:4200",
-    "http://10.101.1.31:3000",
+    "http://192.168.2.113:3000",
   ];
 
   app.enableCors({

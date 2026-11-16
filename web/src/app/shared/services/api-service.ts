@@ -21,4 +21,8 @@ export class ApiService {
     getWeatherDetailData(): Observable<WeatherData[]> {
       return this.http.get<WeatherData[]>('/api/web/getWeatherDetailData');
     }
+    
+    getPvDetailData(): Observable<WeatherData[]> {
+      return this.http.get<WeatherData[]>('/api/web/getPvDetailData');
+    }
 }

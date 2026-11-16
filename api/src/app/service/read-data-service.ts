@@ -1,7 +1,7 @@
-import { FlatWidgetData, WeatherData } from "shared-data";
+import { FlatWidgetData, PvData, WeatherData } from "shared-data";
 import { AppDataSource } from "../../data-source";
 import { PvEntity } from "../../entities/PvEntity";
-import { mapPvEntityToFlatWidgetData, mapWeatherEntityToDetailedWeatherData, mapWeatherEntityToFlatWidgetData } from "./mapper";
+import { mapPvEntityToFlatWidgetData, mapWeatherEntityToDetailedPvData, mapWeatherEntityToDetailedWeatherData, mapWeatherEntityToFlatWidgetData } from "./mapper";
 import { WeatherEntity } from "../../entities/WeatherEntity";
 
 export class ReadDataService {
@@ -20,6 +20,15 @@ export class ReadDataService {
             .orderBy('weather.measuredAt', 'DESC')
             .getMany();
         return mapWeatherEntityToDetailedWeatherData(weatherData);
+    }
+
+    async readPvDetailedData(): Promise<PvData[]> {
+        const pvRepository = AppDataSource.getRepository(PvEntity);
+        const pvData = await pvRepository
+            .createQueryBuilder('pv')
+            .orderBy('pv.measuredAt', 'DESC')
+            .getMany();
+        return mapWeatherEntityToDetailedPvData(pvData);
     }
 
     private async readPvRepo(widgetData: FlatWidgetData[]) {

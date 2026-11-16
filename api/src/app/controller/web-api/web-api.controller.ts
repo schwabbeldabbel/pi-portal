@@ -25,4 +25,11 @@ export class WebApiController {
         this.logger.log(`Fetched ${data.length} weather detail data entries`);
         return data;
     }
+    @Get('getPvDetailData')
+    async getPvDetailData(): Promise<WeatherData[]> {
+        this.logger.log('Received request for PV detail data');
+        const data = await this.readDataService.readPvDetailedData();
+        this.logger.log(`Fetched ${data.length} PV detail data entries`);
+        return data;
+    }
 }
